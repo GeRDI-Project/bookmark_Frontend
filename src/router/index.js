@@ -8,7 +8,7 @@ import Router from 'vue-router'
 import Collections from '@/components/bookmark/Collections'
 
 // Statical UI Elements Components
-import Start from '@/components/Start'
+// import Start from '@/components/Start'
 
 Vue.use(Router)
 
@@ -16,8 +16,8 @@ export default new Router({
   routes: [
   {
     path: '/',
-    name: 'start',
-    component: Start
+    name: 'collections',
+    component: Collections
   },
   { path: '/bookmark',
     name: 'collections',
