@@ -2,7 +2,7 @@
 <div class="">
   <b-jumbotron> 
   <!-- <img src="../assets/GeRDI-Logo.svg" id="logo" /> -->
-  <search-mask/>
+ It's only the Bookmark Service here!
   </b-jumbotron> 
 </div>
 </template>
