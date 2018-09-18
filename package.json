@@ -1,7 +1,7 @@
 {
-  "name": "search-frontend",
+  "name": "bookmark-frontend",
   "version": "1.0.0",
-  "description": "Search frontend for GeRDI",
+  "description": "Bookmark front-end for GeRDI",
   "author": "GeRDI developer team. Anastasia Kazakova, a.kazakova@zbw.eu",
   "private": true,
   "scripts": {

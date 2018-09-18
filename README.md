@@ -1,6 +1,6 @@
-# search-frontend
+# bookmark-frontend
 
-> Search frontend for GeRDI
+> Bookmark front-end for GeRDI
 
 ## Build Setup
 
