@@ -16,7 +16,10 @@
       <li v-for="it in storeData.docs">{{ it.split('/').pop() }}</li>
     </ul>
     Please select a storage provider to proceed:
-    <b-form-select v-model="selected" :options="[{value:null, text:'Please select a provider'},{value:'a', text:'LRZ Sync&Share'}]" class="mb-3" />
+    <b-form-select v-model="selected" :options="[{value:null, text:'Please select a provider'},{value:'a', text:'WebDAV'}]" class="mb-3" />
+  </b-modal>
+  <b-modal ref="noDataModal" title="No storeable data found" :ok-only="true" size="lg" @ok="$refs.noDataModal.hide()">
+    The collection you chose does not provide any downloadable data sets.
   </b-modal>
 </div>
 </template>
@@ -64,8 +67,8 @@ export default {
         .then(function (response) {
           let links = []
           response.data.forEach(function(elem){
-            let dataList = elem._source.researchDataList
-            if (dataList) {
+            if (elem._source && elem._source.researchDataList) {
+              let dataList = elem._source.researchDataList
               dataList.forEach(function(dataElem){
                 links.push(dataElem.researchDataURL)
               })
@@ -75,7 +78,11 @@ export default {
           self.storeData.bookmarkId = collection._id
           self.storeData.bookmarkName = collection.name
           self.storeData.userId = usercookie.getUsername()
-          self.$refs.myModalRef.show()
+          if (links.length) {
+            self.$refs.myModalRef.show()
+          } else {
+            self.$refs.noDataModal.show()
+          }
         })
         .catch(function (error) {
           console.error(error)

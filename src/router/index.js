@@ -14,11 +14,6 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-  {
-    path: '/',
-    name: 'collections',
-    component: Collections
-  },
   { path: '/bookmark',
     name: 'collections',
     component: Collections,
