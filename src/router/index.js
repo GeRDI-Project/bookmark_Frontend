@@ -15,11 +15,6 @@ Vue.use(Router)
 export default new Router({
   mode: 'history',
   routes: [
-  {
-    path: '/',
-    name: 'collections',
-    component: Collections
-  },
   { path: '/bookmark',
     name: 'collections',
     component: Collections,
