@@ -8,7 +8,6 @@ import BootstrapVue from 'bootstrap-vue'
 import sharedUI from 'shared-ui'
 import axios from 'axios'
 import CollectionEntry from '@/components/bookmark/CollectionEntry'
-import NavMenu from '@/components/common/NavMenu'
 
 import { store } from './store/store'
 
@@ -19,7 +18,6 @@ Vue.use(BootstrapVue)
 // register shared-ui component
 Vue.use(sharedUI)
 // register components globally
-Vue.component('nav-menu', NavMenu)
 Vue.component('collection-entry', CollectionEntry)
 
 Vue.config.productionTip = false
