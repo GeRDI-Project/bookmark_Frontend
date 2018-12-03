@@ -25,6 +25,7 @@
 			variant="outline-primary"
 			v-for="researchData in dataset._source.researchDataList" 
 			:href="researchData.researchDataURL"
+			v-b-tooltip.hover :title="'type: \n' + researchData.researchDataType"
 			> 
 
                   {{ researchData.researchDataLabel }}
