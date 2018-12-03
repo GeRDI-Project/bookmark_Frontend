@@ -4,21 +4,39 @@
   <span class="when-opened">Hide </span>
   <span class="when-closed">Show </span>data sets</b-btn>
 <b-collapse v-bind:id="'datasets-'+collection._id" class="mt-2" accordion="datasets">
+
   <div v-if="datasetsForCollection !=='processing'">
+
     <div v-if="datasetsForCollection.length === 0">
       This collection is empty!
     </div>
+
     <div v-else>
       <div class="m-2" v-for="dataset  in datasetsForCollection" :key="dataset.id" v-bind:id="'datasets-'+dataset.id">
         <b-card v-if="dataset._source">
           <document-media :doc="dataset"></document-media>
-          <!-- Just show this to the user once there is any functionality -->
-          <!-- <div slot="footer">
-            <b-button-group>
-              <b-button disabled variant="link">More information</b-button>
-              <b-button disabled variant="link">Remove</b-button>
+          <div slot="footer">
+
+            Download {{dataset._source.formats[0]}} dataset:
+            <b-button-group>	    
+
+
+		<b-button
+			variant="outline-primary"
+			v-for="researchData in dataset._source.researchDataList" 
+			:href="researchData.researchDataURL"
+			> 
+
+                  {{ researchData.researchDataLabel }}
+		
+		</b-button
+
+              <!-- Just show additional button links to the user once they are offer functionality -->
+	      <!-- <b-button disabled variant="link">More information</b-button> -->
+	      <!-- <b-button variant="link">Remove</b-button> -->
+
             </b-button-group>
-          </div> -->
+          </div>
         </b-card>
         <div v-else>
           <h5>
