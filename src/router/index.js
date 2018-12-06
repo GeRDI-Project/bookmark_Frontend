@@ -5,7 +5,7 @@ import Router from 'vue-router'
 // Search Components
 
 // Bookmark Components
-import Collections from '@/components/bookmark/Collections'
+import Collections from '@/components/Collections'
 
 // Statical UI Elements Components
 // import Start from '@/components/Start'

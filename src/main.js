@@ -7,7 +7,7 @@ import router from './router'
 import BootstrapVue from 'bootstrap-vue'
 import sharedUI from 'shared-ui'
 import axios from 'axios'
-import CollectionEntry from '@/components/bookmark/CollectionEntry'
+import CollectionEntry from '@/components/CollectionEntry'
 
 import { store } from './store/store'
 
