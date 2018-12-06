@@ -28,7 +28,7 @@
 /* eslint-disable */
 
 import axios from 'axios'
-//import usercookie from '../util/usercookie.js'
+import usercookie from '../util/usercookie.js'
 export default {
   name: 'collections',
   props: ['datasets'],
