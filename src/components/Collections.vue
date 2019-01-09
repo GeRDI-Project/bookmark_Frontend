@@ -60,6 +60,7 @@ export default {
     return {
       selected: null,
       collections: [],
+      collectionsSelectedForDeletion: [],
       storeData: {
        'bookmarkId': null,
        'bookmarkName': null,
@@ -74,6 +75,7 @@ export default {
   },
 
   methods: {
+
     getCollections() {
       const self = this
       self.collections = []
@@ -85,6 +87,7 @@ export default {
           self.errMsg = error.response;
         });
     },
+
     prestore(collection) {
       const self = this
       axios.get('/api/v1/collections/' + usercookie.getUsername() + '/' + collection._id)
@@ -112,6 +115,7 @@ export default {
           console.error(error)
         });
     },
+
     store(){
       const self = this
       axios.post('/api/v1/store/', self.storeData)
@@ -121,8 +125,34 @@ export default {
         .catch(function (error) {
           console.error(error)
         });
-    }
+    },
+
+    preremove(collection) {
+      const self = this
+      self.collectionsSelectedForDeletion.push(collection)
+      self.$refs.deletionConfirmationModal.show()
+    },
+
+    remove(confirm) {
+      const self = this
+
+      if (confirm === true) {
+        for (var i = 0; i < self.collectionsSelectedForDeletion.length; i++) {
+          axios.delete('/api/v1/collections/' + usercookie.getUsername() + '/' + self.collectionsSelectedForDeletion[i]._id)
+          .then( function (response) {
+            // Nothing to be done
+          })
+          .catch( function (error) {
+            console.error(error)
+          })
+        }
+        this.getCollections()
+      }
+
+      self.collectionsSelectedForDeletion = []
+    },
   }
+
 }
 </script>
 
