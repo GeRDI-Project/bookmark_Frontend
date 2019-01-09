@@ -1,15 +1,20 @@
 <template>
 <div>
+
   <b-list-group>
     <b-list-group-item class="flex-column align-items-start" v-for="(collection) in collections" v-bind:key="collection._id"
       v-bind:id="'collection-'+collection._id">
-      <div class="d-flex w-100 justify-content-between">
+      <div class="d-flex align-items-center justify-content-between">
         <h4 class="mb-1">{{collection.name}}</h4>
-        <b-btn variant="outline-primary" class="ml-auto" @click="prestore(collection)">Store Collection</b-btn>
+        <div>
+          <b-btn variant="outline-primary" class="ml-auto" @click="preremove(collection)">Delete Collection</b-btn>
+          <b-btn variant="outline-primary" class="ml-auto" @click="prestore(collection)">Store Collection</b-btn>
+        </div>
       </div>
       <collection-entry :collection="collection"></collection-entry>
     </b-list-group-item>
   </b-list-group>
+
   <b-modal ref="myModalRef" title="Store selected data sets" ok-title="Store" size="lg" @ok="store()">
     Following data sets are selected for storage:
     <ul>
