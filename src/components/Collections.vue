@@ -23,9 +23,28 @@
     Please select a storage provider to proceed:
     <b-form-select v-model="selected" :options="[{value:null, text:'Please select a provider'},{value:'a', text:'WebDAV'}]" class="mb-3" />
   </b-modal>
+
   <b-modal ref="noDataModal" title="No storeable data found" :ok-only="true" size="lg" @ok="$refs.noDataModal.hide()">
     The collection you chose does not provide any downloadable data sets.
   </b-modal>
+
+  <b-modal ref="deletionConfirmationModal" title="Confirm deletion of collections"
+  ok-title="Delete" size="lg" @cancel="remove(false)" @ok="remove(true)">
+
+    <div v-if="collectionsSelectedForDeletion.length === 1">
+      This collection will be deleted: <br>
+      {{ collectionsSelectedForDeletion[0].name }}
+    </div>
+
+    <div v-else>
+      The following collections will be deleted:
+      <ul>
+        <li v-for="collection in collectionsSelectedForDeletion">{{collection.name}}</li>
+      </ul>
+    </div>
+
+  </b-modal>
+
 </div>
 </template>
 
