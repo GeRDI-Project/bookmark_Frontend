@@ -15,31 +15,23 @@
 
     <div v-else>
       <div class="m-2" v-for="dataset  in datasetsForCollection" :key="dataset.id" v-bind:id="'datasets-'+dataset.id">
+
         <b-card v-if="dataset._source">
+
           <document-media :doc="dataset"></document-media>
-          <div slot="footer">
 
-            Download {{dataset._source.formats[0]}} dataset:
-            <b-button-group>	    
-
-
-		<b-button
-			variant="outline-primary"
-			v-for="researchData in dataset._source.researchDataList" 
-			:href="researchData.researchDataURL"
-			v-b-tooltip.hover :title="'type: \n' + researchData.researchDataType"
-			> 
-
-                  {{ researchData.researchDataLabel }}
-		
-		</b-button
-
-              <!-- Just show additional button links to the user once they are offer functionality -->
-	      <!-- <b-button disabled variant="link">More information</b-button> -->
-	      <!-- <b-button variant="link">Remove</b-button> -->
-
-            </b-button-group>
+          <div slot="header">
+          	<b-button-group>
+				<!-- Enable buttons buttons only once they are offer actual functionality -->
+				<b-button disabled variant="link">Remove from collection</b-button>
+				<b-button disabled variant="link">More information</b-button>
+			</b-button-group>
           </div>
+
+          <div slot="footer">
+			<storing-research-data-selection :research-data-list="dataset._source.researchDataList"></storing-research-data-selection>
+		  </div>
+
         </b-card>
 
         <div v-else>
