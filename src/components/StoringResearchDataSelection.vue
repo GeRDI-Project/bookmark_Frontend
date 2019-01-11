@@ -11,8 +11,8 @@
 				<b-col md="auto">
 					<b-button-group vertical>
 						<b-button disabled variant="outline-primary">  &#x2b06 Store </b-button>
-        					<!-- A href looking like a button which suffices for a single dataset to be downloaded -->
-						<a :href="selectedResearchData.researchDataURL" class="btn btn-md btn-outline-primary">&#x2b07 Download</a>
+						<!-- A href looking like a button which suffices for a single dataset to be downloaded -->
+						<a :href="selectedResearchData.researchDataURL" target="_blank" class="btn btn-md btn-outline-primary">&#x2b07 Download</a>
 					</b-button-group>				
 				</b-col>
 				<b-col>														
