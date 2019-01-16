@@ -20,15 +20,15 @@
 
           <document-media :doc="dataset"></document-media>
 
-          <div slot="header">
+          <div slot="footer">
           	<b-button-group>
 				<!-- Enable buttons buttons only once they are offer actual functionality -->
 				<b-button disabled variant="link">Remove from collection</b-button>
 				<b-button disabled variant="link">More information</b-button>
 			</b-button-group>
-          </div>
 
-          <div slot="footer">
+            <hr>
+
 			<storing-research-data-selection :research-data-list="dataset._source.researchDataList"></storing-research-data-selection>
 		  </div>
 
