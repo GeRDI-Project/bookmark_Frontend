@@ -15,7 +15,7 @@
     </b-list-group-item>
   </b-list-group>
 
-  <b-modal ref="myModalRef" title="Store selected data sets" ok-title="Store" size="lg" @ok="store()">
+  <b-modal centered ref="myModalRef" title="Store selected data sets" ok-title="Store" size="lg" @ok="store()">
     Following data sets are selected for storage:
     <ul>
       <li v-for="it in storeData.docs">{{ it.split('/').pop() }}</li>
@@ -24,11 +24,11 @@
     <b-form-select v-model="selected" :options="[{value:null, text:'Please select a provider'},{value:'a', text:'WebDAV'}]" class="mb-3" />
   </b-modal>
 
-  <b-modal ref="noDataModal" title="No storeable data found" :ok-only="true" size="lg" @ok="$refs.noDataModal.hide()">
+  <b-modal centered ref="noDataModal" title="No storeable data found" :ok-only="true" size="lg" @ok="$refs.noDataModal.hide()">
     The collection you chose does not provide any downloadable data sets.
   </b-modal>
 
-  <b-modal ref="deletionConfirmationModal" title="Confirm deletion of collections"
+  <b-modal centered ref="deletionConfirmationModal" title="Confirm deletion of collections"
   ok-title="Delete" size="lg" @cancel="remove(false)" @ok="remove(true)">
 
     <div v-if="collectionsSelectedForDeletion.length === 1">
