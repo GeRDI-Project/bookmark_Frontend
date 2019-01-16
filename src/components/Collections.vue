@@ -28,20 +28,14 @@
     The collection you chose does not provide any downloadable data sets.
   </b-modal>
 
-  <b-modal centered ref="deletionConfirmationModal" title="Confirm deletion of collections"
+  <b-modal centered ref="deletionConfirmationModal" title="Delete collection"
   ok-title="Delete" size="lg" @cancel="remove(false)" @ok="remove(true)">
 
-    <div v-if="collectionsSelectedForDeletion.length === 1">
-      This collection will be deleted: <br>
-      {{ collectionsSelectedForDeletion[0].name }}
-    </div>
+    <b style="color:#e5001e;font-size:200%;"> &#x26a0; </b>Deleting the following collections <i>cannot be undone</i>:
 
-    <div v-else>
-      The following collections will be deleted:
-      <ul>
-        <li v-for="collection in collectionsSelectedForDeletion">{{collection.name}}</li>
-      </ul>
-    </div>
+    <ul>
+       <li v-for="collection in collectionsSelectedForDeletion"><b>{{collection.name}}</b></li>
+    </ul>
 
   </b-modal>
 
