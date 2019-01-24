@@ -41,8 +41,6 @@
 
 <script>
 /* eslint-disable */
-import usercookie from '../util/usercookie.js'
-import axios from 'axios'
 export default {
   name: 'storing-research-data-selection',
   props: ['researchDataList'],
@@ -52,8 +50,7 @@ export default {
 	}
   },
 
-  created() {
-    axios.defaults.timeout = 10000;
+  created() {   
     if (typeof(this.researchDataList) !== 'undefined') {
     	this.$data.selectedResearchDataIdentifier = this.researchDataList[0].researchDataIdentifier
     }
