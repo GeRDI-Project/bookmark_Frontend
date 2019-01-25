@@ -1,57 +1,46 @@
 <template>
-<div>
-<b-btn v-b-toggle="'datasets-'+collection._id" v-on:click="getDatasetsList(collection._id)" variant="link">
-  <span class="when-opened">Hide </span>
-  <span class="when-closed">Show </span>data sets</b-btn>
-<b-collapse v-bind:id="'datasets-'+collection._id" class="mt-2" accordion="datasets">
-
-  <div v-if="datasetsForCollection !=='processing'">
-
-    <div v-if="datasetsForCollection.length === 0">
-      <b-alert show variant="info">
-        This collection is empty!
-      </b-alert>
-    </div>
-
-    <div v-else>
-      <div class="m-2" v-for="dataset  in datasetsForCollection" :key="dataset.id" v-bind:id="'datasets-'+dataset.id">
-
-        <b-card v-if="dataset._source">
-
-          <document-media :doc="dataset"></document-media>
-
-          <div slot="footer">
-          	<b-button-group>
-				<!-- Enable buttons buttons only once they are offer actual functionality -->
-				<b-button disabled variant="link">Remove from collection</b-button>
-				<b-button disabled variant="link">More information</b-button>
-			</b-button-group>
-
-            <hr>
-
-			<storing-research-data-selection :research-data-list="dataset._source.researchDataList"></storing-research-data-selection>
-		  </div>
-
-        </b-card>
-
+  <div>
+    <b-btn v-b-toggle="'datasets-'+collection._id" v-on:click="getDatasetsList(collection._id)" variant="link">
+      <span class="when-opened">Hide </span>
+      <span class="when-closed">Show </span>data sets</b-btn>
+    <b-collapse v-bind:id="'datasets-'+collection._id" class="mt-2" accordion="datasets">
+      <div v-if="datasetsForCollection !=='processing'">
+        <div v-if="datasetsForCollection.length === 0">
+          <b-alert show variant="info">
+            This collection is empty!
+          </b-alert>
+        </div>
         <div v-else>
-          <h5>
-            <b-alert show variant="info">We are sorry, but this data set is no more available.</b-alert>
-          </h5>
+          <div class="m-2" v-for="dataset  in datasetsForCollection" :key="dataset.id" v-bind:id="'datasets-'+dataset.id">
+            <b-card v-if="dataset._source">
+              <document-media :doc="dataset"></document-media>
+              <div slot="footer">
+                <b-button-group>
+                  <!-- Enable buttons buttons once they offer actual functionality -->
+                  <b-button disabled variant="link">Remove from collection</b-button>
+                  <b-button disabled variant="link">More information</b-button>
+                </b-button-group>
+                <hr>
+                <storing-research-data-selection :research-data-list="dataset._source.researchDataList"></storing-research-data-selection>
+              </div>
+            </b-card>
+            <div v-else>
+              <h5>
+                <b-alert show variant="info">We are sorry, but this data set is no more available.</b-alert>
+              </h5>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+      <div v-else>
+        Loading
+      </div>
+    </b-collapse>
   </div>
-  <div v-else>
-
-    Loading
-  </div>
-</b-collapse>
-</div>
 </template>
 
-<script>
 
+<script>
 /* eslint-disable */
 import usercookie from '../util/usercookie.js'
 import axios from 'axios'
@@ -140,12 +129,12 @@ export default {
 }
 </script>
 
+
 <style scoped>
 
 .card {
   margin-top: 1rem;
 }
-
 .providerLogo {
   max-height: 100px;
   width: auto;
@@ -157,13 +146,11 @@ a {
 :not(.collapsed) > .when-closed {
   display: none;
 }
-
 .btn-primary-gerdi:focus, .btn-primary-gerdi:active:focus, .btn-primary-gerdi.active:focus {
   outline: 0 none;
 }
-
 .btn-primary-gerdi {
-padding: 10px 10px;
+  padding: 10px 10px;
   border: 0 none;
   font-weight: 700;
   letter-spacing: 0.1px;
