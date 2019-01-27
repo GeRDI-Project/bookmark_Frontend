@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-list-group>
-      <b-list-group-item class="flex-column align-items-start" v-for="(collection) in collections" v-bind:key="collection._id"
+      <b-list-group-item class="flex-column align-items-start" v-for="(collection) in collections" v-bind:key="collection._id" v-bind:id="'collection-'+collection._id">
         <div class="d-flex w-100 justify-content-between">
           <h4 class="mb-1">{{collection.name}}</h4>
           <b-btn variant="outline-primary" class="ml-auto" @click="prestore(collection)">Store Collection</b-btn>
