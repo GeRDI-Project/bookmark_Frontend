@@ -52,7 +52,7 @@ export default {
 
   created() {
     if (typeof(this.researchDataList) !== 'undefined') {
-      this.$data.selectedResearchDataIdentifier = this.researchDataList[0].researchDataIdentifier
+      this.selectedResearchDataIdentifier = this.researchDataList[0].researchDataIdentifier
     }
   },
 
@@ -60,7 +60,7 @@ export default {
     isOneResearchDataGiven: function () { return this.researchDataList.length === 1 },
     selectedResearchData: function () {
       for(var i = 0; i < this.researchDataList.length; i++) {
-        if (this.$data.selectedResearchDataIdentifier === this.researchDataList[i].researchDataIdentifier) {
+        if (this.selectedResearchDataIdentifier === this.researchDataList[i].researchDataIdentifier) {
           return this.researchDataList[i]
         }
       }
