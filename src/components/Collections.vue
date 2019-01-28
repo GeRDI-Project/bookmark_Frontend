@@ -1,46 +1,34 @@
 <template>
-<div>
-
-  <b-list-group>
-    <b-list-group-item class="flex-column align-items-start" v-for="(collection) in collections" v-bind:key="collection._id"
-      v-bind:id="'collection-'+collection._id">
-      <div class="d-flex w-100 justify-content-between">
-        <h4 class="mb-1">{{collection.name}}</h4>
-        <div>
-          <b-btn variant="outline-primary" class="ml-auto" @click="preremove(collection)">Delete Collection</b-btn>
-          <b-btn variant="outline-primary" class="ml-auto" @click="prestore(collection)">Store Collection</b-btn>
+  <div>
+    <b-list-group>
+      <b-list-group-item class="flex-column align-items-start" v-for="(collection) in collections" v-bind:key="collection._id" v-bind:id="'collection-'+collection._id">
+        <div class="d-flex w-100 justify-content-between">
+          <h4 class="mb-1">{{collection.name}}</h4>
+          <div>
+            <b-btn variant="outline-primary" class="ml-auto" @click="preremove(collection)">Delete Collection</b-btn>
+            <b-btn variant="outline-primary" class="ml-auto" @click="prestore(collection)">Store Collection</b-btn>
+          </div>
         </div>
-      </div>
-      <collection-entry :collection="collection"></collection-entry>
-    </b-list-group-item>
-  </b-list-group>
-
-  <b-modal centered ref="myModalRef" title="Store selected data sets" ok-title="Store" size="lg" @ok="store()">
-    Following data sets are selected for storage:
-    <ul>
-      <li v-for="it in storeData.docs">{{ it.split('/').pop() }}</li>
-    </ul>
-    Please select a storage provider to proceed:
-    <b-form-select v-model="selected" :options="[{value:null, text:'Please select a provider'},{value:'a', text:'WebDAV'}]" class="mb-3" />
-  </b-modal>
-
-  <b-modal centered ref="noDataModal" title="No storeable data found" :ok-only="true" size="lg" @ok="$refs.noDataModal.hide()">
-    The collection you chose does not provide any downloadable data sets.
-  </b-modal>
-
-  <b-modal centered ref="deletionConfirmationModal" title="Delete collection"
-  ok-title="Delete" size="lg" @cancel="remove(false)" @ok="remove(true)">
-
-    <b style="color:#e5001e;font-size:200%;"> &#x26a0; </b>Deleting the following collections <i>cannot be undone</i>:
-
-    <ul>
-       <li v-for="collection in collectionsSelectedForDeletion"><b>{{collection.name}}</b></li>
-    </ul>
-
-  </b-modal>
-
-</div>
+        <collection-entry :collection="collection"></collection-entry>
+      </b-list-group-item>
+    </b-list-group>
+    <b-modal centered ref="myModalRef" title="Store selected data sets" ok-title="Store" size="lg" @ok="store()">
+      Following data sets are selected for storage:
+      <ul>
+        <li v-for="it in storeData.docs">{{ it.split('/').pop() }}</li>
+      </ul>
+      Please select a storage provider to proceed:
+      <b-form-select v-model="selected" :options="[{value:null, text:'Please select a provider'},{value:'a', text:'WebDAV'}]" class="mb-3" />
+    </b-modal>
+    <b-modal centered ref="noDataModal" title="No storeable data found" :ok-only="true" size="lg" @ok="$refs.noDataModal.hide()">
+      The collection you chose does not provide any downloadable data sets.
+    </b-modal>
+    <b-modal centered ref="deletionConfirmationModal" title="Delete collection" ok-title="Delete" size="lg" @ok="remove()">
+      The collection <b>"{{ collectionSelectedForDeletion == null ? "undefined" : collectionSelectedForDeletion.name }}"</b> will be deleted permanently.
+    </b-modal>
+  </div>
 </template>
+
 
 <script>
 /* eslint-disable */
@@ -54,12 +42,12 @@ export default {
     return {
       selected: null,
       collections: [],
-      collectionsSelectedForDeletion: [],
+      collectionSelectedForDeletion: null,
       storeData: {
-       'bookmarkId': null,
-       'bookmarkName': null,
-       'docs': [],
-       'userId': null
+        'bookmarkId': null,
+        'bookmarkName': null,
+        'docs': [],
+        'userId': null
       }
     }
   },
@@ -69,7 +57,6 @@ export default {
   },
 
   methods: {
-
     getCollections() {
       const self = this
       self.collections = []
@@ -123,32 +110,27 @@ export default {
 
     preremove(collection) {
       const self = this
-      self.collectionsSelectedForDeletion.push(collection)
+      self.collectionSelectedForDeletion = collection
       self.$refs.deletionConfirmationModal.show()
     },
 
-    remove(confirm) {
-      const self = this
+    remove() {
 
-      if (confirm === true) {
-        for (var i = 0; i < self.collectionsSelectedForDeletion.length; i++) {
-          axios.delete('/api/v1/collections/' + usercookie.getUsername() + '/' + self.collectionsSelectedForDeletion[i]._id)
-          .then( function (response) {
-            // Nothing to be done
-          })
-          .catch( function (error) {
-            console.error(error)
-          })
-        }
-        this.getCollections()
-      }
-
-      self.collectionsSelectedForDeletion = []
+      axios.delete('/api/v1/collections/' + usercookie.getUsername() + '/' + this.collectionSelectedForDeletion._id)
+        .then( function (response) {
+          // Nothing to be done
+        })
+        .catch( function (error) {
+          console.error(error)
+        })
+      // update the list of collections
+      this.getCollections()
     },
   }
 
 }
 </script>
+
 
 <style scoped>
 h4 {
