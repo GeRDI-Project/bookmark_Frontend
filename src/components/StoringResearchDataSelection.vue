@@ -12,7 +12,15 @@
             <b-button-group vertical>
               <b-button disabled variant="outline-primary">  Store research data </b-button>
               <!-- A href looking like a button which suffices for a single dataset to be downloaded -->
-              <a :href="selectedResearchData.researchDataURL" target="_blank" class="btn btn-md btn-outline-primary">Download research data</a>
+              <a 
+                :href="selectedResearchData.researchDataURL" 
+                target="_blank" 
+                class="btn btn-md btn-outline-primary"
+                data-toggle="tooltip" 
+                title="If you download the research data you will leave the support of GeRDI: You will not be able to access it through the Process/Analyze service. Consider storing it to web instead."
+                >
+                Download research data
+              </a>
             </b-button-group>
           </b-col>
           <b-col>
