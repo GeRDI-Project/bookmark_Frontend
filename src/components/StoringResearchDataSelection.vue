@@ -12,15 +12,7 @@
             <b-button-group vertical>
               <b-button disabled variant="outline-primary">  Store research data </b-button>
               <!-- A href looking like a button which suffices for a single dataset to be downloaded -->
-              <a 
-                :href="selectedResearchData.researchDataURL" 
-                target="_blank" 
-                class="btn btn-md btn-outline-primary"
-                data-toggle="tooltip" 
-                title="If you download the research data you will leave the support of GeRDI: You will not be able to access it through the Process/Analyze service. Consider storing it to web instead."
-                >
-                Download research data
-              </a>
+              <a :href="selectedResearchData.researchDataURL" target="_blank" class="btn btn-md btn-outline-primary" > Download research data</a>
             </b-button-group>
           </b-col>
           <b-col>
@@ -31,14 +23,16 @@
             </div>
             <!-- The form is not yet "multiple" -->
             <select v-model="selectedResearchDataIndex" :disabled="isOneResearchDataGiven" >
-                <option v-for="(value, index) in researchDataList" :value="index">
-                  {{ value.researchDataLabel }}
-                </option> 
+              <option v-for="(value, index) in researchDataList" :value="index">
+              {{ value.researchDataLabel }}
+              </option> 
             </select>
             <br>
-               dataset file type: <strong> {{ selectedResearchData.researchDataType }} </strong>
+            dataset file type: <strong> {{ selectedResearchData.researchDataType }} </strong>
           </b-col>
         </b-row>
+        <hr>
+        <b> Note: </b> If you download the research data you will leave the support of GeRDI: You will not be able to access it through the Process/Analyze service. Consider storing it to web instead.
       </b-container>
     </div>
   </div>
@@ -67,7 +61,7 @@ export default {
   computed: {
     isOneResearchDataGiven: function () { return this.researchDataList.length === 1 },
     selectedResearchData: function() {
-          return this.researchDataList[this.selectedResearchDataIndex]
+      return this.researchDataList[this.selectedResearchDataIndex]
     }
   }
 }
