@@ -115,16 +115,9 @@ export default {
     },
 
     remove() {
-
-      axios.delete('/api/v1/collections/' + usercookie.getUsername() + '/' + this.collectionSelectedForDeletion._id)
-        .then( function (response) {
-          // Nothing to be done
-        })
-        .catch( function (error) {
-          console.error(error)
-        })
-      // update the list of collections
-      this.getCollections()
+      this.$store.dispatch('deleteCollection', {
+        collectionID: this.collectionSelectedForDeletion._id
+      })
     },
   }
 
