@@ -19,17 +19,16 @@
             <div v-if="isOneResearchDataGiven">
               One dataset available:
             </div> <div v-else>
-              1 of available {{ researchDataList.length }} datasets selected: <br>
+              Select one of available {{ researchDataList.length }} datasets: <br>
             </div>
             <!-- The form is not yet "multiple" -->
-            <b-form-select
-              :disabled="isOneResearchDataGiven"
-              v-model="selectedResearchDataIdentifier"
-              value-field="researchDataIdentifier"
-              text-field="researchDataLabel"
-              :options="researchDataList"
-              />
-              dataset file type: <strong> {{ selectedResearchData.researchDataType }} </strong>
+            <select v-model="selectedResearchDataIndex" :disabled="isOneResearchDataGiven" >
+                <option v-for="(value, index) in researchDataList" :value="index">
+                  {{ value.researchDataLabel }}
+                </option> 
+            </select>
+            <br>
+               dataset file type: <strong> {{ selectedResearchData.researchDataType }} </strong>
           </b-col>
         </b-row>
       </b-container>
@@ -46,7 +45,8 @@ export default {
 
   data: function () {
     return {
-      selectedResearchDataIdentifier: null
+      selectedResearchDataIdentifier: null,
+      selectedResearchDataIndex: 0
     }
   },
 
@@ -58,12 +58,8 @@ export default {
 
   computed: {
     isOneResearchDataGiven: function () { return this.researchDataList.length === 1 },
-    selectedResearchData: function () {
-      for(var i = 0; i < this.researchDataList.length; i++) {
-        if (this.selectedResearchDataIdentifier === this.researchDataList[i].researchDataIdentifier) {
-          return this.researchDataList[i]
-        }
-      }
+    selectedResearchData: function() {
+          return this.researchDataList[this.selectedResearchDataIndex]
     }
   }
 }
