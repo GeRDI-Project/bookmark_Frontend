@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-list-group>
-      <b-list-group-item class="flex-column align-items-start" v-for="(collection) in collections" v-bind:key="collection._id" v-bind:id="'collection-'+collection._id">
+      <b-list-group-item class="flex-column align-items-start" v-for="(collection) in collections" v-bind:key="collection.id" v-bind:id="'collection-'+collection.id">
         <div class="d-flex w-100 justify-content-between">
           <h4 class="mb-1">{{collection.name}}</h4>
           <div>
@@ -41,7 +41,7 @@ export default {
   data() {
     return {
       selected: null,
-      collections: [],
+      collections: this.$store.getters.getCollectionList,
       collectionSelectedForDeletion: null,
       storeData: {
         'bookmarkId': null,
@@ -51,27 +51,10 @@ export default {
       }
     }
   },
-
-  created() {
-    this.getCollections()
-  },
-
   methods: {
-    getCollections() {
-      const self = this
-      self.collections = []
-      axios.get('/api/v1/collections/' + usercookie.getUsername())
-        .then(function (response) {
-          self.collections = response.data
-        })
-        .catch(function (error) {
-          self.errMsg = error.response;
-        });
-    },
-
     prestore(collection) {
       const self = this
-      axios.get('/api/v1/collections/' + usercookie.getUsername() + '/' + collection._id)
+      axios.get('/api/v1/collections/' + usercookie.getUsername() + '/' + collection.id)
         .then(function (response) {
           let links = []
           response.data.forEach(function(elem){
@@ -83,7 +66,7 @@ export default {
             }
           })
           self.storeData.docs = links
-          self.storeData.bookmarkId = collection._id
+          self.storeData.bookmarkId = collection.id
           self.storeData.bookmarkName = collection.name
           self.storeData.userId = usercookie.getUsername()
           if (links.length) {
@@ -109,14 +92,13 @@ export default {
     },
 
     preremove(collection) {
-      const self = this
-      self.collectionSelectedForDeletion = collection
-      self.$refs.deletionConfirmationModal.show()
+      this.collectionSelectedForDeletion = collection
+      this.$refs.deletionConfirmationModal.show()
     },
 
     remove() {
       this.$store.dispatch('deleteCollection', {
-        collectionID: this.collectionSelectedForDeletion._id
+        collectionID: this.collectionSelectedForDeletion.id
       })
     },
   }
