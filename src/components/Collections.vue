@@ -4,10 +4,10 @@
       <b-list-group-item class="flex-column align-items-start" v-for="(collection) in collections" v-bind:key="collection.id" v-bind:id="'collection-'+collection.id">
         <div class="d-flex w-100 justify-content-between">
           <h4 class="mb-1">{{collection.name}}</h4>
-          <div>
+          <b-button-group>
             <b-btn variant="outline-primary" class="ml-auto" @click="preremove(collection)">Delete Collection</b-btn>
             <b-btn variant="outline-primary" class="ml-auto" @click="prestore(collection)">Store Collection</b-btn>
-          </div>
+          </b-button-group>
         </div>
         <collection-entry :collection="collection"></collection-entry>
       </b-list-group-item>
@@ -24,7 +24,9 @@
       The collection you chose does not provide any downloadable data sets.
     </b-modal>
     <b-modal centered ref="deletionConfirmationModal" title="Delete collection" ok-title="Delete" size="lg" @ok="remove()">
-      The collection <b>"{{ collectionSelectedForDeletion == null ? "undefined" : collectionSelectedForDeletion.name }}"</b> will be deleted permanently.
+      <b>{{ collectionSelectedForDeletion == null ? "undefined" : collectionSelectedForDeletion.name }}</b> 
+      <br>
+      This collection will be deleted permanently.
     </b-modal>
   </div>
 </template>
