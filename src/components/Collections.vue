@@ -16,7 +16,7 @@
       <li v-for="it in storeData.docs">{{ it.split('/').pop() }}</li>
     </ul>
     Please select a storage provider to proceed:
-    <b-form-select v-model="selected" :options="[{value:null, text:'Please select a provider'},{value:'a', text:'WebDAV'}]" class="mb-3" />
+    <b-form-select v-model="selected" :options="[{value:null, text:'Please select a provider'},{value:'a', text:'WebDAV'},{value:'b', text:'Jupyter Hub'}]" class="mb-3" />
   </b-modal>
   <b-modal ref="noDataModal" title="No storeable data found" :ok-only="true" size="lg" @ok="$refs.noDataModal.hide()">
     The collection you chose does not provide any downloadable data sets.
@@ -90,9 +90,15 @@ export default {
     },
     store(){
       const self = this
-      axios.post('/api/v1/store/', self.storeData)
+      var subdomain
+      if (selected == 'a') {
+        subdomain = 'store'
+      } else {
+        subdomain = 'store-jhub'
+      }
+      axios.post('/api/v1/' + subdomain + '/', self.storeData)
         .then(function (response) {
-          location.href='/store/files/' + response.data.sessionId
+          location.href='/' + subdomain + '/files/' + response.data.sessionId
         })
         .catch(function (error) {
           console.error(error)
