@@ -1,7 +1,8 @@
 <template>
   <div>
     <b-list-group>
-      <b-list-group-item class="flex-column align-items-start" v-for="(collection) in collections" v-bind:key="collection.id" v-bind:id="'collection-'+collection.id">
+      <b-list-group-item class="flex-column align-items-start" v-for="(collection) in collections" v-bind:key="collection._id" v-bind:id="'collection-'+collection._id">
+
         <div class="d-flex w-100 justify-content-between">
           <h4 class="mb-1">{{collection.name}}</h4>
           <b-button-group>
@@ -31,7 +32,6 @@
   </div>
 </template>
 
-
 <script>
 /* eslint-disable */
 
@@ -53,10 +53,26 @@ export default {
       }
     }
   },
+
+  created() {
+    this.getCollections()
+  },
+
   methods: {
+    getCollections() {
+      const self = this
+      self.collections = []
+      axios.get('/api/v1/collections/' + usercookie.getUsername())
+        .then(function (response) {
+          self.collections = response.data
+        })
+        .catch(function (error) {
+          self.errMsg = error.response;
+        });
+    },
     prestore(collection) {
       const self = this
-      axios.get('/api/v1/collections/' + usercookie.getUsername() + '/' + collection.id)
+      axios.get('/api/v1/collections/' + usercookie.getUsername() + '/' + collection._id)
         .then(function (response) {
           let links = []
           response.data.forEach(function(elem){
@@ -68,7 +84,7 @@ export default {
             }
           })
           self.storeData.docs = links
-          self.storeData.bookmarkId = collection.id
+          self.storeData.bookmarkId = collection._id
           self.storeData.bookmarkName = collection.name
           self.storeData.userId = usercookie.getUsername()
           if (links.length) {
@@ -81,12 +97,17 @@ export default {
           console.error(error)
         });
     },
-
     store(){
       const self = this
-      axios.post('/api/v1/store/', self.storeData)
+      var subdomain
+      if (this.selected == 'a') {
+        subdomain = 'store'
+      } else {
+        subdomain = 'store-jhub'
+      }
+      axios.post('/api/v1/' + subdomain + '/', self.storeData)
         .then(function (response) {
-          location.href='/store/files/' + response.data.sessionId
+          location.href='/' + subdomain + '/files/' + response.data.sessionId
         })
         .catch(function (error) {
           console.error(error)
@@ -100,14 +121,13 @@ export default {
 
     remove() {
       this.$store.dispatch('deleteCollection', {
-        collectionID: this.collectionSelectedForDeletion.id
+        collectionID: this.collectionSelectedForDeletion._id
       })
+      this.getCollections()
     },
   }
-
 }
 </script>
-
 
 <style scoped>
 h4 {
