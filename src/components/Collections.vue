@@ -23,9 +23,9 @@
   </div>
 </template>
 
-
 <script>
 /* eslint-disable */
+
 import axios from 'axios'
 import usercookie from '../util/usercookie.js'
 export default {
@@ -89,9 +89,15 @@ export default {
     },
     store(){
       const self = this
-      axios.post('/api/v1/store/', self.storeData)
+      var subdomain
+      if (this.selected == 'a') {
+        subdomain = 'store'
+      } else {
+        subdomain = 'store-jhub'
+      }
+      axios.post('/api/v1/' + subdomain + '/', self.storeData)
         .then(function (response) {
-          location.href='/store/files/' + response.data.sessionId
+          location.href='/' + subdomain + '/files/' + response.data.sessionId
         })
         .catch(function (error) {
           console.error(error)
@@ -100,7 +106,6 @@ export default {
   }
 }
 </script>
-
 
 <style scoped>
 h4 {

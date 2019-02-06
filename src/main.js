@@ -23,7 +23,7 @@ Vue.component('collection-entry', CollectionEntry)
 Vue.component('storing-research-data-selection', StoringResearchDataSelection)
 
 Vue.config.productionTip = false
-axios.defaults.timeout = 10000;
+axios.defaults.timeout = 15000;
 
 /* eslint-disable no-new */
 new Vue({
