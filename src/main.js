@@ -21,7 +21,7 @@ Vue.use(sharedUI)
 Vue.component('collection-entry', CollectionEntry)
 
 Vue.config.productionTip = false
-axios.defaults.timeout = 10000;
+axios.defaults.timeout = 15000;
 
 /* eslint-disable no-new */
 new Vue({

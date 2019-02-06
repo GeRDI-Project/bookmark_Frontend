@@ -91,7 +91,7 @@ export default {
     store(){
       const self = this
       var subdomain
-      if (selected == 'a') {
+      if (this.selected == 'a') {
         subdomain = 'store'
       } else {
         subdomain = 'store-jhub'
