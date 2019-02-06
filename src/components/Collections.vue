@@ -54,22 +54,7 @@ export default {
     }
   },
 
-  created() {
-    this.getCollections()
-  },
-
   methods: {
-    getCollections() {
-      const self = this
-      self.collections = []
-      axios.get('/api/v1/collections/' + usercookie.getUsername())
-        .then(function (response) {
-          self.collections = response.data
-        })
-        .catch(function (error) {
-          self.errMsg = error.response;
-        });
-    },
     prestore(collection) {
       const self = this
       axios.get('/api/v1/collections/' + usercookie.getUsername() + '/' + collection._id)
@@ -121,9 +106,8 @@ export default {
 
     remove() {
       this.$store.dispatch('deleteCollection', {
-        collectionID: this.collectionSelectedForDeletion._id
+        collectionID: this.collectionSelectedForDeletion.id
       })
-      this.getCollections()
     },
   }
 }
