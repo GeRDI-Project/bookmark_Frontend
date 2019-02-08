@@ -23,7 +23,7 @@
                 </b-button-group>
                 <hr>
                 -->
-                <storing-research-data-selection :research-data-list="dataset._source.researchDataList"></storing-research-data-selection>
+                <select-research-data :research-data-list="dataset._source.researchDataList"></select-research-data>
               </div>
             </b-card>
             <div v-else>
