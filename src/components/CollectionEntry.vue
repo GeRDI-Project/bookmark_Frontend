@@ -15,12 +15,14 @@
             <b-card v-if="dataset._source">
               <document-media :doc="dataset"></document-media>
               <div slot="footer">
+                <!-- Enable buttons buttons once they offer actual functionality -->
+                <!--
                 <b-button-group>
-                  <!-- Enable buttons buttons once they offer actual functionality -->
                   <b-button disabled variant="link">Remove from collection</b-button>
                   <b-button disabled variant="link">More information</b-button>
                 </b-button-group>
                 <hr>
+                -->
                 <storing-research-data-selection :research-data-list="dataset._source.researchDataList"></storing-research-data-selection>
               </div>
             </b-card>
