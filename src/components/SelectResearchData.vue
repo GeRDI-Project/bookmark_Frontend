@@ -10,9 +10,9 @@
         <b-row>
           <b-col md="auto">
             <b-button-group vertical>
-              <b-button disabled variant="outline-primary">  Store research data </b-button>
+              <b-button disabled variant="outline-primary">  Store data </b-button>
               <!-- A href looking like a button which suffices for a single dataset to be downloaded -->
-              <a :href="selectedResearchData.researchDataURL" target="_blank" class="btn btn-md btn-outline-primary" > Download research data</a>
+              <a :href="selectedResearchData.researchDataURL" target="_blank" class="btn btn-md btn-outline-primary" style="margin-top:1ex;"> Download data</a>
             </b-button-group>
           </b-col>
           <b-col>
