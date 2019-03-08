@@ -8,12 +8,15 @@
     <div v-else>
       <b-container>
         <b-row>
-          <b-col md="auto">
-            <b-button-group vertical>
+          <b-col md="auto" id="horizontal_ruler_below">
+            <div id="spacer_below">
               <b-button disabled variant="outline-primary">  Store data </b-button>
-              <!-- A href looking like a button which suffices for a single dataset to be downloaded -->
-              <a :href="selectedResearchData.researchDataURL" target="_blank" class="btn btn-md btn-outline-primary" style="margin-top:1ex;"> Download data</a>
-            </b-button-group>
+            </div>
+            <div>
+              <form method="get" :action="selectedResearchData.researchDataURL">
+                <b-button        variant="outline-primary" type="submit" > Download data </b-button>
+              </form>
+            </div>
           </b-col>
           <b-col>
             <div v-if="isOneResearchDataGiven">
@@ -21,17 +24,14 @@
             </div> <div v-else>
               Select one of available {{ researchDataList.length }} datasets: <br>
             </div>
-            <!-- The form is not yet "multiple" -->
-            <select v-model="selectedResearchDataIndex" :disabled="isOneResearchDataGiven" >
-              <option v-for="(value, index) in researchDataList" :value="index">
-              {{ value.researchDataLabel }}
-              </option> 
-            </select>
-            <br>
-            dataset file type: <strong> {{ selectedResearchData.researchDataType }} </strong>
+            <div id="spacer_below">
+              <b-form-select v-model="selectedResearchDataIndex" :options="researchDataOptions"/>
+            </div>
+            <div>
+              dataset file type: <strong> {{ selectedResearchData.researchDataType }} </strong>
+            </div>
           </b-col>
         </b-row>
-        <hr>
         <b> Note: </b> If you download the research data you will leave the support of GeRDI: You will not be able to access it through the Process/Analyze service. Consider storing it to web instead.
       </b-container>
     </div>
@@ -48,7 +48,7 @@ export default {
   data: function () {
     return {
       selectedResearchDataIdentifier: null,
-      selectedResearchDataIndex: 0
+      selectedResearchDataIndex: 1
     }
   },
 
@@ -62,6 +62,9 @@ export default {
     isOneResearchDataGiven: function () { return this.researchDataList.length === 1 },
     selectedResearchData: function() {
       return this.researchDataList[this.selectedResearchDataIndex]
+    },
+    researchDataOptions: function() {
+      return Array.from(this.researchDataList).map((value, index) => ({ value: index, text: value.researchDataLabel}));
     }
   }
 }
@@ -69,5 +72,12 @@ export default {
 
 
 <style scoped>
-/* No changes in this component */
+#horizontal_ruler_below {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+}
+#spacer_below {
+  padding-bottom: 0.5rem;
+}
 </style>
