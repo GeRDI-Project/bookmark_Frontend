@@ -10,11 +10,11 @@
         <b-row>
           <b-col md="auto" id="horizontal_ruler_below">
             <div id="spacer_below">
-              <b-button disabled variant="outline-primary">  Store data </b-button>
+              <b-button disabled variant="outline-primary btn-block">  Store data </b-button>
             </div>
             <div>
               <form method="get" :action="selectedResearchData.researchDataURL">
-                <b-button        variant="outline-primary" type="submit" > Download data </b-button>
+                <b-button        variant="outline-primary btn-block" type="submit" > Download data </b-button>
               </form>
             </div>
           </b-col>
