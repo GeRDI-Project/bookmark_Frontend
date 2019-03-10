@@ -9,7 +9,7 @@
             <b-btn variant="outline-primary" class="ml-auto" @click="prestore(collection)"> Store Collection </b-btn>
             <b-popover :title="collection.name" :target="'del_coll_btn'+collection.id" :ref="'collection_deletion_confirmation'+collection.id" placement="bottom" triggers="click blur">
               <b-btn variant="secondary" @click="close_popover('del_coll_btn'+collection.id)"                    > Cancel </b-btn>
-              <b-btn variant="primary"   @click="close_popover('del_coll_btn'+collection.id); remove(collection)"> Delete </b-btn>
+              <b-btn variant="primary"   @click="close_popover('del_coll_btn'+collection.id); remove(collection)"> Delete permanently</b-btn>
             </b-popover>
           </b-button-group>
         </div>
