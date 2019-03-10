@@ -2,12 +2,15 @@
   <div>
     <b-list-group>
       <b-list-group-item class="flex-column align-items-start" v-for="(collection) in collections" v-bind:key="collection._id" v-bind:id="'collection-'+collection._id">
-
         <div class="d-flex w-100 justify-content-between">
           <h4 class="mb-1">{{collection.name}}</h4>
           <b-button-group>
-            <b-btn variant="outline-primary" class="ml-auto" @click="preremove(collection)">Delete Collection</b-btn>
-            <b-btn variant="outline-primary" class="ml-auto" @click="prestore(collection)">Store Collection</b-btn>
+            <b-btn variant="outline-primary" class="ml-auto" :id="'del_coll_btn'+collection.id"> Delete Collection </b-btn>
+            <b-btn variant="outline-primary" class="ml-auto" @click="prestore(collection)"> Store Collection </b-btn>
+            <b-popover :title="collection.name" :target="'del_coll_btn'+collection.id" :ref="'collection_deletion_confirmation'+collection.id" placement="bottom" triggers="click blur">
+              <b-btn variant="secondary" @click="close_popover('del_coll_btn'+collection.id)"                    > Cancel </b-btn>
+              <b-btn variant="primary"   @click="close_popover('del_coll_btn'+collection.id); remove(collection)"> Delete </b-btn>
+            </b-popover>
           </b-button-group>
         </div>
         <collection-entry :collection="collection"></collection-entry>
@@ -19,15 +22,10 @@
         <li v-for="it in storeData.docs">{{ it.split('/').pop() }}</li>
       </ul>
       Please select a storage provider to proceed:
-      <b-form-select v-model="selected" :options="[{value:null, text:'Please select a provider'},{value:'a', text:'WebDAV'}]" class="mb-3" />
+      <b-form-select v-model="selected" :options="[{value:null, text:'Please select a provider'},{value:'a', text:'WebDAV'},{value:'b', text:'Jupyter Hub'}]" class="mb-3" />
     </b-modal>
     <b-modal centered ref="noDataModal" title="No storeable data found" :ok-only="true" size="lg" @ok="$refs.noDataModal.hide()">
       The collection you chose does not provide any downloadable data sets.
-    </b-modal>
-    <b-modal centered ref="deletionConfirmationModal" title="Delete collection" ok-title="Delete" size="lg" @ok="remove()">
-      <b>{{ collectionSelectedForDeletion == null ? "undefined" : collectionSelectedForDeletion.name }}</b> 
-      <br>
-      This collection will be deleted permanently.
     </b-modal>
   </div>
 </template>
@@ -44,7 +42,6 @@ export default {
     return {
       selected: null,
       collections: this.$store.getters.getCollectionList,
-      collectionSelectedForDeletion: null,
       storeData: {
         'bookmarkId': null,
         'bookmarkName': null,
@@ -82,6 +79,7 @@ export default {
           console.error(error)
         });
     },
+
     store(){
       const self = this
       var subdomain
@@ -99,15 +97,14 @@ export default {
         });
     },
 
-    preremove(collection) {
-      this.collectionSelectedForDeletion = collection
-      this.$refs.deletionConfirmationModal.show()
+    remove(collection) {
+      this.$store.dispatch('deleteCollection', {
+        collectionID: collection.id
+      })
     },
 
-    remove() {
-      this.$store.dispatch('deleteCollection', {
-        collectionID: this.collectionSelectedForDeletion.id
-      })
+    close_popover(id) {
+      this.$root.$emit('bv::hide::popover', id)
     },
   }
 }
