@@ -1,9 +1,9 @@
 <template>
   <div>
-    <b-btn v-b-toggle="'datasets-'+collection._id" v-on:click="getDatasetsList(collection._id)" variant="link">
+    <b-btn v-b-toggle="'datasets-'+collection.id" v-on:click="getDatasetsList(collection.id)" variant="link">
       <span class="when-opened">Hide </span>
       <span class="when-closed">Show </span>data sets</b-btn>
-    <b-collapse v-bind:id="'datasets-'+collection._id" class="mt-2" accordion="datasets">
+    <b-collapse v-bind:id="'datasets-'+collection.id" class="mt-2" accordion="datasets">
       <div v-if="datasetsForCollection !=='processing'">
         <div v-if="datasetsForCollection.length === 0">
           <b-alert show variant="info">
@@ -17,11 +17,10 @@
               <div slot="footer">
                 <!-- Enable buttons buttons once they offer actual functionality -->
                 <!--
-                <b-button-group>
+                  <b-button-group>
                   <b-button disabled variant="link">Remove from collection</b-button>
                   <b-button disabled variant="link">More information</b-button>
-                </b-button-group>
-                <hr>
+                  </b-button-group>
                 -->
                 <select-research-data :research-data-list="dataset._source.researchDataList"></select-research-data>
               </div>
@@ -83,12 +82,10 @@ export default {
           .then(function (response) {
             self.datasetsForCollection = []
             self.datasetsForCollection = response.data
-            //console.log(response)
           })
           .catch(function (error) {
             self.datasetsForCollection = []
             self.errMsg = error.response;
-            //console.log(error)
           });
       }
     },

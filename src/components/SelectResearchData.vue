@@ -45,14 +45,13 @@ export default {
 
   data: function () {
     return {
-      selectedResearchDataIdentifier: null,
-      selectedResearchDataIndex: 1
+      selectedResearchDataIndex: 0
     }
   },
 
   created() {
-    if (typeof(this.researchDataList) !== 'undefined') {
-      this.selectedResearchDataIdentifier = this.researchDataList[0].researchDataIdentifier
+    if (typeof(this.researchDataList) === 'undefined') {
+      this.selectedResearchDataIndex = null;
     }
   },
 

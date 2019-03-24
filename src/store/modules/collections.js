@@ -36,6 +36,12 @@ const getters = {
 const mutations = {
   addCollection (state, collection) {
     state.collectionList.push(collection)
+  },
+  deleteCollection (state, collection) {
+    var index = state.collectionList.indexOf(collection)
+    if (index > -1) {
+      state.collectionList.splice(index, 1)
+    }
   }
 }
 
@@ -51,10 +57,20 @@ const actions = {
         'Content-Type': 'application/json'
       }
     })
-    .then(function (response) {
-      data.id = response.data.collectionId
-      commit('addCollection', data)
-    })
+      .then(function (response) {
+        data.id = response.data.collectionId
+        commit('addCollection', data)
+      })
+  },
+  deleteCollection ({commit, state}, payload) {
+    const collection = this.getters.getCollectionById(payload.collectionID)
+    axios.delete('/api/v1/collections/' + usercookie.getUsername() + '/' + collection.id)
+      .then(function (response) {
+        commit('deleteCollection', collection)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
   },
   updateCollection ({commit, state}, payload) {
     const collection = this.getters.getCollectionById(payload.collectionID)
@@ -64,11 +80,11 @@ const actions = {
         'Content-Type': 'application/json'
       }
     })
-    .then(function (response) {
-    })
-    .catch(function (error) {
-      console.log(error)
-    })
+      .then(function (response) {
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
   },
   refreshCollections (state) {
     state.collectionList = []
