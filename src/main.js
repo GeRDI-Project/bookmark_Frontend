@@ -8,6 +8,7 @@ import BootstrapVue from 'bootstrap-vue'
 import sharedUI from 'shared-ui'
 import axios from 'axios'
 import CollectionEntry from '@/components/CollectionEntry'
+import SelectResearchData from '@/components/SelectResearchData'
 
 import { store } from './store/store'
 
@@ -19,6 +20,7 @@ Vue.use(BootstrapVue)
 Vue.use(sharedUI)
 // register components globally
 Vue.component('collection-entry', CollectionEntry)
+Vue.component('select-research-data', SelectResearchData)
 
 Vue.config.productionTip = false
 axios.defaults.timeout = 15000;

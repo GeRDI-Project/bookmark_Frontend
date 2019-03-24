@@ -6,19 +6,24 @@
     <b-collapse v-bind:id="'datasets-'+collection.id" class="mt-2" accordion="datasets">
       <div v-if="datasetsForCollection !=='processing'">
         <div v-if="datasetsForCollection.length === 0">
-          This collection is empty!
+          <b-alert show variant="info">
+            This collection is empty!
+          </b-alert>
         </div>
         <div v-else>
           <div class="m-2" v-for="dataset  in datasetsForCollection" :key="dataset.id" v-bind:id="'datasets-'+dataset.id">
             <b-card v-if="dataset._source">
               <document-media :doc="dataset"></document-media>
-              <!-- Just show this to the user once there is any functionality -->
-              <!-- <div slot="footer">
-                <b-button-group>
-                <b-button disabled variant="link">More information</b-button>
-                <b-button disabled variant="link">Remove</b-button>
-                </b-button-group>
-                </div> -->
+              <div slot="footer">
+                <!-- Enable buttons buttons once they offer actual functionality -->
+                <!--
+                  <b-button-group>
+                  <b-button disabled variant="link">Remove from collection</b-button>
+                  <b-button disabled variant="link">More information</b-button>
+                  </b-button-group>
+                -->
+                <select-research-data :research-data-list="dataset._source.researchDataList"></select-research-data>
+              </div>
             </b-card>
             <div v-else>
               <h5>
@@ -35,25 +40,28 @@
   </div>
 </template>
 
-<script>
 
+<script>
 /* eslint-disable */
 import usercookie from '../util/usercookie.js'
 import axios from 'axios'
 export default {
   name: 'collection-entry',
   props: ['collection'],
+
   data() {
     return {
       datasets: [],
       datasetsForCollection: []
     }
   },
+
   created() {
     axios.defaults.timeout = 10000;
-
   },
+
   methods: {
+
     getTitle: function(dataset) {
       if (dataset._source.titles.length > 0) {
         return dataset._source.titles[0].value
@@ -61,6 +69,7 @@ export default {
         return "This Document is missing"
       }
     },
+
     getDatasetsList: function(collectionID) {
       const self = this
       if (self.lastcollectionID && self.lastcollectionID === collectionID) {
@@ -73,33 +82,36 @@ export default {
           .then(function (response) {
             self.datasetsForCollection = []
             self.datasetsForCollection = response.data
-            //console.log(response)
           })
           .catch(function (error) {
             self.datasetsForCollection = []
             self.errMsg = error.response;
-            //console.log(error)
           });
       }
     },
+
     filterForViewURI(linksArray) {
       if(linksArray) {
         return linksArray.filter(elem => elem.webLinkType == 'ViewURL')[0].webLinkURI
       }
       return '#'
     },
+
     showPublicationYear(year) {
       return year
     },
+
     showPublisher(publisher) {
       return publisher
     },
+
     showDescription(description) {
       let result = description.replace(/(<([^>]+)>)/ig, '')
       let limit = 850
       if (result.length > limit) result = result.substr(0,limit) + ' [...]'
       return result
     },
+
     hasProviderLogo(linksArray) {
       if(linksArray) {
         let val = linksArray.filter(elem => elem.webLinkType == 'ProviderLogoURL')
@@ -107,21 +119,21 @@ export default {
       }
       return false
     },
+
     getProviderLogo(linksArray) {
       let val = linksArray.filter(elem => elem.webLinkType == 'ProviderLogoURL')
       return val[0].webLinkURI
     }
-
   }
 }
 </script>
+
 
 <style scoped>
 
 .card {
   margin-top: 1rem;
 }
-
 .providerLogo {
   max-height: 100px;
   width: auto;
@@ -133,11 +145,9 @@ a {
 :not(.collapsed) > .when-closed {
   display: none;
 }
-
 .btn-primary-gerdi:focus, .btn-primary-gerdi:active:focus, .btn-primary-gerdi.active:focus {
   outline: 0 none;
 }
-
 .btn-primary-gerdi {
   padding: 10px 10px;
   border: 0 none;
