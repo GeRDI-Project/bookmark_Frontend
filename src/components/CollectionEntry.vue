@@ -1,38 +1,38 @@
 <template>
-<div>
-<b-btn v-b-toggle="'datasets-'+collection._id" v-on:click="getDatasetsList(collection._id)" variant="link">
-  <span class="when-opened">Hide </span>
-  <span class="when-closed">Show </span>data sets</b-btn>
-<b-collapse v-bind:id="'datasets-'+collection._id" class="mt-2" accordion="datasets">
-  <div v-if="datasetsForCollection !=='processing'">
-    <div v-if="datasetsForCollection.length === 0">
-      This collection is empty!
-    </div>
-    <div v-else>
-      <div class="m-2" v-for="dataset  in datasetsForCollection" :key="dataset.id" v-bind:id="'datasets-'+dataset.id">
-        <b-card v-if="dataset._source">
-          <document-media :doc="dataset"></document-media>
-          <!-- Just show this to the user once there is any functionality -->
-          <!-- <div slot="footer">
-            <b-button-group>
-              <b-button disabled variant="link">More information</b-button>
-              <b-button disabled variant="link">Remove</b-button>
-            </b-button-group>
-          </div> -->
-        </b-card>
+  <div>
+    <b-btn v-b-toggle="'datasets-'+collection.id" v-on:click="getDatasetsList(collection.id)" variant="link">
+      <span class="when-opened">Hide </span>
+      <span class="when-closed">Show </span>data sets</b-btn>
+    <b-collapse v-bind:id="'datasets-'+collection.id" class="mt-2" accordion="datasets">
+      <div v-if="datasetsForCollection !=='processing'">
+        <div v-if="datasetsForCollection.length === 0">
+          This collection is empty!
+        </div>
         <div v-else>
-          <h5>
-            <b-alert show variant="info">We are sorry, but this data set is no more available.</b-alert>
-          </h5>
+          <div class="m-2" v-for="dataset  in datasetsForCollection" :key="dataset.id" v-bind:id="'datasets-'+dataset.id">
+            <b-card v-if="dataset._source">
+              <document-media :doc="dataset"></document-media>
+              <!-- Just show this to the user once there is any functionality -->
+              <!-- <div slot="footer">
+                <b-button-group>
+                <b-button disabled variant="link">More information</b-button>
+                <b-button disabled variant="link">Remove</b-button>
+                </b-button-group>
+                </div> -->
+            </b-card>
+            <div v-else>
+              <h5>
+                <b-alert show variant="info">We are sorry, but this data set is no more available.</b-alert>
+              </h5>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+      <div v-else>
+        Loading
+      </div>
+    </b-collapse>
   </div>
-  <div v-else>
-    Loading
-  </div>
-</b-collapse>
-</div>
 </template>
 
 <script>
@@ -139,7 +139,7 @@ a {
 }
 
 .btn-primary-gerdi {
-padding: 10px 10px;
+  padding: 10px 10px;
   border: 0 none;
   font-weight: 700;
   letter-spacing: 0.1px;
