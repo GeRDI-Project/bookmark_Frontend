@@ -1,5 +1,19 @@
 <template>
-  <div>
+  <div v-if="!loaded || collections === null">
+    <b-list-group>
+      <b-list-group-item v-for="i in 5" :key="i">
+        <ContentLoader class="test" :width="1110" :height="80">
+          <rect x="0" y="0" rx="3" ry="3" width="130" height="34" />
+          <rect x="810" y="0" rx="0" ry="0" width="285" height="38" />
+          <rect x="10" y="48" rx="0" ry="0" width="110" height="44" />
+        </ContentLoader>
+      </b-list-group-item>
+    </b-list-group>
+  </div>
+  <div v-else-if="collections !== null && collections.length === 0">
+    You have no Collection stored yet.
+  </div>
+  <div v-else>
     <b-list-group>
       <b-list-group-item class="flex-column align-items-start" v-for="(collection) in collections" v-bind:key="collection.id" v-bind:id="'collection-'+collection.id">
         <div class="d-flex w-100 justify-content-between">
@@ -8,8 +22,8 @@
             <b-btn variant="outline-primary" class="ml-auto" :id="'del_coll_btn'+collection.id"> Delete Collection </b-btn>
             <b-btn variant="outline-primary" class="ml-auto" @click="prestore(collection)"> Store Collection </b-btn>
             <b-popover :title='"<h4>" + collection.name + "</h4>"' :target="'del_coll_btn'+collection.id" :ref="'collection_deletion_confirmation'+collection.id" placement="bottom" triggers="click blur">
-              <b-btn variant="secondary" @click="close_popover('del_coll_btn'+collection.id)"                    > Cancel </b-btn>
-              <b-btn variant="primary"   @click="close_popover('del_coll_btn'+collection.id); remove(collection)"> Delete permanently</b-btn>
+              <b-btn variant="secondary" @click="closePopover('del_coll_btn'+collection.id)"                    > Cancel </b-btn>
+              <b-btn variant="primary"   @click="closePopover('del_coll_btn'+collection.id); remove(collection)"> Delete permanently</b-btn>
             </b-popover>
           </b-button-group>
         </div>
@@ -32,16 +46,18 @@
 
 <script>
 /* eslint-disable */
-
+import { ContentLoader } from 'vue-content-loader'
 import axios from 'axios'
-import usercookie from '../util/usercookie.js'
 export default {
   name: 'collections',
   props: ['datasets'],
+  components: {
+    ContentLoader
+  },
   data() {
     return {
+      loaded: false,
       selected: null,
-      collections: this.$store.getters.getCollectionList,
       storeData: {
         'bookmarkId': null,
         'bookmarkName': null,
@@ -50,11 +66,27 @@ export default {
       }
     }
   },
-
+  watch: {
+    isChecked: function () {
+      var self = this
+      this.$store.dispatch('refreshCollections', { vm: this }).then(function () { self.loaded = true })
+    }
+  },
+  computed: {
+    isChecked: function () {
+      return this.$gerdi.aai.isChecked()
+    },
+    isLoading () {
+      return this.$store.getters.isLoading
+    },
+    collections () {
+      return this.$store.getters.getCollectionList
+    }
+  },
   methods: {
     prestore(collection) {
       const self = this
-      axios.get('/api/v1/collections/' + usercookie.getUsername() + '/' + collection.id)
+      axios.get('/api/v1/collections/' + this.$gerdi.aai.getUser().sub + '/' + collection.id)
         .then(function (response) {
           let links = []
           response.data.forEach(function(elem){
@@ -68,7 +100,7 @@ export default {
           self.storeData.docs = links
           self.storeData.bookmarkId = collection.id
           self.storeData.bookmarkName = collection.name
-          self.storeData.userId = usercookie.getUsername()
+          self.storeData.userId = this.$gerdi.aai.getUser().sub
           if (links.length) {
             self.$refs.myModalRef.show()
           } else {
@@ -99,11 +131,12 @@ export default {
 
     remove(collection) {
       this.$store.dispatch('deleteCollection', {
-        collectionID: collection.id
+        collectionID: collection.id,
+        vm: this
       })
     },
 
-    close_popover(id) {
+    closePopover(id) {
       this.$root.$emit('bv::hide::popover', id)
     },
   }

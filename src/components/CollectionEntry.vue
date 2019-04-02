@@ -43,7 +43,6 @@
 
 <script>
 /* eslint-disable */
-import usercookie from '../util/usercookie.js'
 import axios from 'axios'
 export default {
   name: 'collection-entry',
@@ -78,7 +77,7 @@ export default {
       } else {
         self.lastcollectionID = collectionID
         self.datasetsForCollection = "processing"
-        axios.get('/api/v1/collections/' + usercookie.getUsername() + '/' + collectionID)
+        axios.get('/api/v1/collections/' + this.$gerdi.aai.getUser().sub + '/' + collectionID)
           .then(function (response) {
             self.datasetsForCollection = []
             self.datasetsForCollection = response.data

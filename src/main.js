@@ -5,7 +5,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import BootstrapVue from 'bootstrap-vue'
-import sharedUI from 'shared-ui'
+import { sharedUI } from 'shared-ui'
 import axios from 'axios'
 import CollectionEntry from '@/components/CollectionEntry'
 import SelectResearchData from '@/components/SelectResearchData'
@@ -17,7 +17,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(BootstrapVue)
 // register shared-ui component
-Vue.use(sharedUI)
+Vue.use(sharedUI, {store: store})
 // register components globally
 Vue.component('collection-entry', CollectionEntry)
 Vue.component('select-research-data', SelectResearchData)
@@ -37,8 +37,5 @@ new Vue({
   template: '<App/>',
   components: {
     App
-  },
-  created() {
-    this.$store.dispatch('refreshCollections')
   }
 })

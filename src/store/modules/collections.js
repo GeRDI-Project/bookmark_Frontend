@@ -15,15 +15,24 @@
  */
 
 import axios from 'axios'
-import usercookie from '../../util/usercookie.js'
+
+const getUser = function (vm = null) {
+  if (vm === null) return 'nel'
+  if (vm.$gerdi.aai.getUser() !== null) return vm.$gerdi.aai.getUser().sub
+  return 'nel'
+}
 
 const state = {
-  collectionList: []
+  collectionList: null,
+  isLoading: true
 }
 
 const getters = {
   getCollectionList: state => {
     return state.collectionList
+  },
+  isLoading: state => {
+    return state.isLoading
   },
   getCollectionById: (state) => (collectionId) => {
     return state.collectionList.find(collection => collection.id === collectionId)
@@ -35,7 +44,19 @@ const getters = {
 
 const mutations = {
   addCollection (state, collection) {
+    if (state.collectionList === null) {
+      state.collectionList = [collection]
+      return
+    }
     state.collectionList.push(collection)
+  },
+  setCollection (state, collection) {
+    console.log(collection)
+    state.collectionList = collection
+    console.log(state.collectionList)
+  },
+  setLoading (state, isLoading) {
+    state.isLoading = isLoading
   },
   deleteCollection (state, collection) {
     var index = state.collectionList.indexOf(collection)
@@ -52,56 +73,58 @@ const actions = {
       name: payload.collectionName,
       docs: [payload.docID]
     }
-    axios.post('/api/v1/collections/' + usercookie.getUsername(), data, {
+    axios.post('/api/v1/collections/' + getUser(payload.vm), data, {
       headers: {
         'Content-Type': 'application/json'
       }
     })
-      .then(function (response) {
-        data.id = response.data.collectionId
-        commit('addCollection', data)
-      })
+    .then(function (response) {
+      data.id = response.data.collectionId
+      commit('addCollection', data)
+    })
   },
   deleteCollection ({commit, state}, payload) {
     const collection = this.getters.getCollectionById(payload.collectionID)
-    axios.delete('/api/v1/collections/' + usercookie.getUsername() + '/' + collection.id)
-      .then(function (response) {
-        commit('deleteCollection', collection)
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
+    axios.delete('/api/v1/collections/' + getUser(payload.vm) + '/' + collection.id)
+    .then(function (response) {
+      commit('deleteCollection', collection)
+    })
+    .catch(function (error) {
+      console.log(error)
+    })
   },
   updateCollection ({commit, state}, payload) {
     const collection = this.getters.getCollectionById(payload.collectionID)
     collection.docs.push(payload.docID)
-    axios.put('/api/v1/collections/' + usercookie.getUsername() + '/' + collection.id, collection, {
+    axios.put('/api/v1/collections/' + getUser(payload.vm) + '/' + collection.id, collection, {
       headers: {
         'Content-Type': 'application/json'
       }
     })
-      .then(function (response) {
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
+    .then(function (response) {
+    })
+    .catch(function (error) {
+      console.log(error)
+    })
   },
-  refreshCollections (state) {
-    state.collectionList = []
+  refreshCollections (state, { vm }) {
     var self = this
-    axios.get('/api/v1/collections/' + usercookie.getUsername())
-      .then(function (response) {
-        response.data.forEach(function (elem) {
-          var collectionDocs = []
-          axios.get('/api/v1/collections/' + usercookie.getUsername() + '/' + elem._id)
-            .then(function (subresponse) {
-              subresponse.data.forEach(function (doc) {
-                collectionDocs.push(doc._id)
-              })
-              self.commit('addCollection', {'id': elem._id, 'name': elem.name, 'docs': collectionDocs})
-            })
+    self.commit('setLoading', true)
+    axios.get('/api/v1/collections/' + getUser(vm))
+    .then(function (response) {
+      response.data.forEach(async function (elem) {
+        var collectionDocs = []
+        const subresponse = await axios('/api/v1/collections/' + getUser(vm) + '/' + elem._id)
+        subresponse.data.forEach(function (doc) {
+          collectionDocs.push(doc._id)
         })
+        self.commit('addCollection', {'id': elem._id, 'name': elem.name, 'docs': collectionDocs})
       })
+      self.commit('setLoading', false)
+    })
+    .catch(function (error) {
+      console.error(error)
+    })
   }
 }
 
