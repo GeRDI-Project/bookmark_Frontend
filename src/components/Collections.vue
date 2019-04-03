@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!loaded || collections === null">
+  <div v-if="!loaded || collections === null || !(loaded && user === null)">
     <b-list-group>
       <b-list-group-item v-for="i in 5" :key="i">
         <ContentLoader class="test" :width="1110" :height="80">
@@ -10,10 +10,10 @@
       </b-list-group-item>
     </b-list-group>
   </div>
-  <div v-else-if="collections !== null && collections.length === 0">
-    You have no Collection stored yet.
+  <div v-else-if="collections !== null && collections.length === 0 && user !== null">
+    <b-alert show variant="secondary">You have no Collections stored yet.</b-alert>
   </div>
-  <div v-else>
+  <div v-else-if="collections !== null && collections.length > 0 && user !== null">
     <b-list-group>
       <b-list-group-item class="flex-column align-items-start" v-for="(collection) in collections" v-bind:key="collection.id" v-bind:id="'collection-'+collection.id">
         <div class="d-flex w-100 justify-content-between">
@@ -42,6 +42,9 @@
       The collection you chose does not provide any downloadable data sets.
     </b-modal>
   </div>
+  <div v-else>
+    <b-alert show variant="warning">You are not logged in. Please log in to use this feature.</b-alert>
+  </div>
 </template>
 
 <script>
@@ -69,7 +72,7 @@ export default {
   watch: {
     isChecked: function () {
       var self = this
-      this.$store.dispatch('refreshCollections', { vm: this }).then(function () { self.loaded = true })
+      this.$store.dispatch('refreshCollections', { vm: this }).then(function () {console.log('vlka'); self.loaded = true })
     }
   },
   computed: {
@@ -80,7 +83,11 @@ export default {
       return this.$store.getters.isLoading
     },
     collections () {
+      console.log(this.$store.getters.getCollectionList)
       return this.$store.getters.getCollectionList
+    },
+    user () {
+      return this.$gerdi.aai.getUser()
     }
   },
   methods: {

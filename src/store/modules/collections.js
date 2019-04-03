@@ -17,9 +17,9 @@
 import axios from 'axios'
 
 const getUser = function (vm = null) {
-  if (vm === null) return 'nel'
+  if (vm === null) return null
   if (vm.$gerdi.aai.getUser() !== null) return vm.$gerdi.aai.getUser().sub
-  return 'nel'
+  return null
 }
 
 const state = {
@@ -46,9 +46,11 @@ const mutations = {
   addCollection (state, collection) {
     if (state.collectionList === null) {
       state.collectionList = [collection]
+      console.log(state.collectionList)
       return
     }
     state.collectionList.push(collection)
+    console.log(state.collectionList)
   },
   setCollection (state, collection) {
     console.log(collection)
@@ -109,9 +111,11 @@ const actions = {
   },
   refreshCollections (state, { vm }) {
     var self = this
+    if (getUser(vm) === null) return
     self.commit('setLoading', true)
     axios.get('/api/v1/collections/' + getUser(vm))
     .then(function (response) {
+      if (response.data.length === 0) self.commit('setCollection', [])
       response.data.forEach(async function (elem) {
         var collectionDocs = []
         const subresponse = await axios('/api/v1/collections/' + getUser(vm) + '/' + elem._id)
