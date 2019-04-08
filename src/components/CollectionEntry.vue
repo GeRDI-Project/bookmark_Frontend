@@ -54,13 +54,10 @@ export default {
       datasetsForCollection: []
     }
   },
-
   created() {
     axios.defaults.timeout = 10000;
   },
-
   methods: {
-
     getTitle: function(dataset) {
       if (dataset._source.titles.length > 0) {
         return dataset._source.titles[0].value
@@ -68,7 +65,6 @@ export default {
         return "This Document is missing"
       }
     },
-
     getDatasetsList: function(collectionID) {
       const self = this
       if (self.lastcollectionID && self.lastcollectionID === collectionID) {
@@ -88,29 +84,24 @@ export default {
           });
       }
     },
-
     filterForViewURI(linksArray) {
       if(linksArray) {
         return linksArray.filter(elem => elem.webLinkType == 'ViewURL')[0].webLinkURI
       }
       return '#'
     },
-
     showPublicationYear(year) {
       return year
     },
-
     showPublisher(publisher) {
       return publisher
     },
-
     showDescription(description) {
       let result = description.replace(/(<([^>]+)>)/ig, '')
       let limit = 850
       if (result.length > limit) result = result.substr(0,limit) + ' [...]'
       return result
     },
-
     hasProviderLogo(linksArray) {
       if(linksArray) {
         let val = linksArray.filter(elem => elem.webLinkType == 'ProviderLogoURL')
@@ -118,7 +109,6 @@ export default {
       }
       return false
     },
-
     getProviderLogo(linksArray) {
       let val = linksArray.filter(elem => elem.webLinkType == 'ProviderLogoURL')
       return val[0].webLinkURI

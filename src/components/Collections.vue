@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!loaded || collections === null || !(loaded && user === null)">
+  <div v-if="(!loaded || collections === null) && !(loaded && user === null)">
     <b-list-group>
       <b-list-group-item v-for="i in 5" :key="i">
         <ContentLoader class="test" :width="1110" :height="80">
@@ -72,7 +72,7 @@ export default {
   watch: {
     isChecked: function () {
       var self = this
-      this.$store.dispatch('refreshCollections', { vm: this }).then(function () {console.log('vlka'); self.loaded = true })
+      this.$store.dispatch('refreshCollections', { vm: this }).then(function () {self.loaded = true })
     }
   },
   computed: {
@@ -83,7 +83,6 @@ export default {
       return this.$store.getters.isLoading
     },
     collections () {
-      console.log(this.$store.getters.getCollectionList)
       return this.$store.getters.getCollectionList
     },
     user () {
@@ -107,7 +106,7 @@ export default {
           self.storeData.docs = links
           self.storeData.bookmarkId = collection.id
           self.storeData.bookmarkName = collection.name
-          self.storeData.userId = this.$gerdi.aai.getUser().sub
+          self.storeData.userId = self.$gerdi.aai.getUser().sub
           if (links.length) {
             self.$refs.myModalRef.show()
           } else {
