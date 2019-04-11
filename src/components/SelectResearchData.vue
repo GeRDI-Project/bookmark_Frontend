@@ -30,7 +30,8 @@
             </div>
           </b-col>
         </b-row>
-        <b> Note: </b> If you download the research data you will leave the support of GeRDI: You will not be able to access it through the Process/Analyze service. Consider storing it to web instead.
+        <b> Note: </b>
+          By clicking on "Download data" you will be redirected to the original data provider. Data files will be loaded onto your local machine without any further support from GeRDI infrastructure services. If you still want to make use of GeRDI infrastructure services including analyze service, please consider storing the data via the GeRDI store service.
       </b-container>
     </div>
   </div>
