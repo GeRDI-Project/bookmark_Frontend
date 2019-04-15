@@ -73,7 +73,9 @@ export default {
       } else {
         self.lastcollectionID = collectionID
         self.datasetsForCollection = "processing"
-        axios.get('/api/v1/collections/' + this.$gerdi.aai.getUser().sub + '/' + collectionID)
+        axios.get('/api/v1/collections/' + collectionID,{
+            headers: {'Authorization': "Bearer " + self.$gerdi.aai.getIdToken()}
+          })
           .then(function (response) {
             self.datasetsForCollection = []
             self.datasetsForCollection = response.data

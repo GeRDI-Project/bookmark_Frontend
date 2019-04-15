@@ -92,7 +92,9 @@ export default {
   methods: {
     prestore(collection) {
       const self = this
-      axios.get('/api/v1/collections/' + this.$gerdi.aai.getUser().sub + '/' + collection.id)
+      axios.get('/api/v1/collections/' + collection.id,{
+          headers: {'Authorization': "Bearer " + self.$gerdi.aai.getIdToken()}
+        })
         .then(function (response) {
           let links = []
           response.data.forEach(function(elem){
