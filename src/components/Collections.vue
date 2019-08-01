@@ -133,15 +133,11 @@ export default {
 
     store(){
       const self = this
-      var subdomain
-      if (this.selected == 'a') {
-        subdomain = 'store'
-      } else {
-        subdomain = 'store-jhub'
-      }
-      axios.post('/api/v1/' + subdomain + '/', self.storeData)
+      //TODO: catch case nothing selected and use port from zuul
+      var subdomain = this.selected
+      axios.post(subdomain + '/', self.storeData)
         .then(function (response) {
-          location.href='/' + subdomain + '/files/' + response.data.sessionId
+          location.href = subdomain + '/files/' + response.data.sessionId
         })
         .catch(function (error) {
           console.error(error)
