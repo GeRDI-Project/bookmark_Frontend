@@ -36,7 +36,7 @@
         <li v-for="it in storeData.docs">{{ it.split('/').pop() }}</li>
       </ul>
       Please select a storage provider to proceed:
-      <b-form-select v-model="selected" :options="[{value:null, text:'Please select a provider'},{value:'a', text:'WebDAV'},{value:'b', text:'Jupyter Hub'}]" class="mb-3" />
+      <b-form-select v-model="selected" :options="options" class="mb-3" />
     </b-modal>
     <b-modal centered ref="noDataModal" title="No storeable data found" :ok-only="true" size="lg" @ok="$refs.noDataModal.hide()">
       The collection you chose does not provide any downloadable data sets.
@@ -66,8 +66,19 @@ export default {
         'bookmarkName': null,
         'docs': [],
         'userId': null
-      }
+      },
+      options: [
+        { value: null, text:'Please select a provider'}
+      ]
     }
+  },
+  created() {
+    const self = this
+    //TODO: correct url for zuul
+    axios.get('http://localhost:30225/storeservices')
+      .then(function (response) {
+        self.options = self.options.concat(response.data);
+      });
   },
   watch: {
     isChecked: function () {
