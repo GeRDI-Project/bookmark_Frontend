@@ -75,9 +75,12 @@ export default {
   created() {
     const self = this
     //TODO: correct url for zuul
-    axios.get('http://localhost:30225/storeservices')
+    axios.get('/api/v1/services/store')
       .then(function (response) {
         self.options = self.options.concat(response.data);
+      })
+      .catch(function (error) {
+        console.error(error)
       });
   },
   watch: {
@@ -133,9 +136,9 @@ export default {
 
     store(){
       const self = this
-      //TODO: catch case nothing selected and use port from zuul
+      //TODO: catch case nothing selected
       var subdomain = this.selected
-      axios.post(subdomain + '/', self.storeData)
+      axios.post('/api/v1' + subdomain + '/', self.storeData)
         .then(function (response) {
           location.href = subdomain + '/files/' + response.data.sessionId
         })
