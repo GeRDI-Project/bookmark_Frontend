@@ -136,8 +136,10 @@ export default {
 
     store(){
       const self = this
-      //TODO: catch case nothing selected
       var subdomain = this.selected
+      if (subdomain === null) {
+        return
+      }
       axios.post('/api/v1' + subdomain + '/', self.storeData)
         .then(function (response) {
           location.href = subdomain + '/files/' + response.data.sessionId
