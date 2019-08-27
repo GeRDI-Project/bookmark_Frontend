@@ -74,8 +74,7 @@ export default {
   },
   created() {
     const self = this
-    //TODO: correct url for zuul
-    axios.get('/api/v1/services/store')
+    axios.get('/api/v1/gateway/services/store')
       .then(function (response) {
         self.options = self.options.concat(response.data);
       })
@@ -140,7 +139,7 @@ export default {
       if (subdomain === null) {
         return
       }
-      axios.post('/api/v1' + subdomain + '/', self.storeData)
+      axios.post('/api/v1/gateway' + subdomain + '/', self.storeData)
         .then(function (response) {
           location.href = subdomain + '/files/' + response.data.sessionId
         })
