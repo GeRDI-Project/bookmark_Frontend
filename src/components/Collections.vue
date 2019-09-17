@@ -11,17 +11,27 @@
     </b-list-group>
   </div>
   <div v-else-if="collections !== null && collections.length === 0 && user !== null">
-    <b-alert show variant="secondary">You have no Collections stored yet.</b-alert>
+    <b-alert show variant="secondary">You have no bookmark collections yet.</b-alert>
   </div>
   <div v-else-if="collections !== null && collections.length > 0 && user !== null">
+    <center><h4 class="mb-1">Bookmark Collections</h4></center>
     <b-list-group>
       <b-list-group-item class="flex-column align-items-start" v-for="(collection) in collections" v-bind:key="collection.id" v-bind:id="'collection-'+collection.id">
         <div class="d-flex w-100 justify-content-between">
           <h4 class="mb-1">{{collection.name}}</h4>
           <b-button-group>
-            <b-btn variant="outline-primary" class="ml-auto" :id="'del_coll_btn'+collection.id"> Delete Collection </b-btn>
-            <b-btn variant="outline-primary" class="ml-auto" @click="prestore(collection)"> Store Collection </b-btn>
-            <b-popover :title='"<h4>" + collection.name + "</h4>"' :target="'del_coll_btn'+collection.id" :ref="'collection_deletion_confirmation'+collection.id" placement="bottom" triggers="click blur">
+            <b-btn variant="outline-primary" class="ml-auto" :id="'ren_coll_btn'+collection.id"> Rename </b-btn>
+            <b-btn variant="outline-primary" class="ml-auto" :id="'del_coll_btn'+collection.id"> Delete </b-btn>
+            <b-btn variant="outline-primary" class="ml-auto" @click="prestore(collection)"> Store </b-btn>
+
+
+            <b-popover :target="'ren_coll_btn'+collection.id" :ref="'collection_rename'+collection.id" placement="bottom" triggers="click blur">
+              <b-form-input v-model="newCollectionName" type="text" :placeholder='collection.name' autofocus trim /> <br>
+              <b-btn variant="secondary" @click="closePopover('ren_coll_btn'+collection.id); newCollectionName=''" > Cancel </b-btn>
+              <b-btn variant="primary"   @click="closePopover('ren_coll_btn'+collection.id); rename(collection)" :disabled='!isValidNewCollectionName' > Rename </b-btn>
+            </b-popover>
+
+            <b-popover :title='collection.name' :target="'del_coll_btn'+collection.id" :ref="'collection_deletion_confirmation'+collection.id" placement="bottom" triggers="click blur">
               <b-btn variant="secondary" @click="closePopover('del_coll_btn'+collection.id)"                    > Cancel </b-btn>
               <b-btn variant="primary"   @click="closePopover('del_coll_btn'+collection.id); remove(collection)"> Delete permanently</b-btn>
             </b-popover>
@@ -61,6 +71,7 @@ export default {
     return {
       loaded: false,
       selected: null,
+      newCollectionName: '',
       storeData: {
         'bookmarkId': null,
         'bookmarkName': null,
@@ -81,6 +92,9 @@ export default {
     },
     isLoading () {
       return this.$store.getters.isLoading
+    },
+    isValidNewCollectionName() {
+      return this.newCollectionName.length > 0 && !this.collections.map(c => c.name).includes(this.newCollectionName)
     },
     collections () {
       return this.$store.getters.getCollectionList
@@ -139,8 +153,16 @@ export default {
 
     remove(collection) {
       this.$store.dispatch('deleteCollection', {
+        vm: this,
         collectionID: collection.id,
-        vm: this
+      })
+    },
+
+    rename(collection) {
+      this.$store.dispatch('updateCollection', {
+        vm: this,
+        collectionID: collection.id,
+        collectionName: this.newCollectionName
       })
     },
 

@@ -18,7 +18,7 @@ import axios from 'axios'
 
 const getUser = function (vm = null) {
   if (vm === null) return null
-  if (vm.$gerdi.aai.getUser() !== null) {return vm.$gerdi.aai.getUser().sub}
+  if (vm.$gerdi.aai.getUser() !== null) { return vm.$gerdi.aai.getUser().sub }
   return null
 }
 
@@ -99,7 +99,12 @@ const actions = {
   },
   updateCollection ({commit, state}, payload) {
     const collection = this.getters.getCollectionById(payload.collectionID)
+    if (payload.docID) {
     collection.docs.push(payload.docID)
+    }
+    if (payload.collectionName) {
+      collection.name = payload.collectionName
+    }
     axios.put(getPath(payload.vm) + '/' + collection.id, collection, {
       headers: {
         'Content-Type': 'application/json'
