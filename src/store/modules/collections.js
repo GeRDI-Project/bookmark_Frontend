@@ -111,6 +111,23 @@ const actions = {
       console.log(error)
     })
   },
+  removeFromCollection ({commit, state}, payload) {
+    const collection = this.getters.getCollectionById(payload.collectionID)
+    var index = collection.docs.indexOf(payload.docID)
+    if (index > -1) {
+      collection.docs.splice(index, 1)
+    }
+    axios.put(getPath(payload.vm) + '/' + collection.id, collection, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(function (response) {
+    })
+    .catch(function (error) {
+      console.log(error)
+    })
+  },
   refreshCollections (state, { vm }) {
     var self = this
     if (getUser(vm) === null) return
