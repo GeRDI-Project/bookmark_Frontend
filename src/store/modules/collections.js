@@ -100,7 +100,7 @@ const actions = {
   updateCollection ({commit, state}, payload) {
     const collection = this.getters.getCollectionById(payload.collectionID)
     if (payload.docID) {
-    collection.docs.push(payload.docID)
+      collection.docs.push(payload.docID)
     }
     if (payload.collectionName) {
       collection.name = payload.collectionName
