@@ -11,17 +11,29 @@
     </b-list-group>
   </div>
   <div v-else-if="collections !== null && collections.length === 0 && user !== null">
-    <b-alert show variant="secondary">You have no Collections stored yet.</b-alert>
+    <b-alert show variant="secondary">You have no bookmark collections yet.</b-alert>
   </div>
   <div v-else-if="collections !== null && collections.length > 0 && user !== null">
+    <center><h4 class="mb-1">Bookmark Collections</h4></center>
     <b-list-group>
       <b-list-group-item class="flex-column align-items-start" v-for="(collection) in collections" v-bind:key="collection.id" v-bind:id="'collection-'+collection.id">
         <div class="d-flex w-100 justify-content-between">
           <h4 class="mb-1">{{collection.name}}</h4>
           <b-button-group>
-            <b-btn variant="outline-primary" class="ml-auto" :id="'del_coll_btn'+collection.id"> Delete Collection </b-btn>
-            <b-btn variant="outline-primary" class="ml-auto" @click="prestore(collection)"> Store Collection </b-btn>
-            <b-popover :title='"<h4>" + collection.name + "</h4>"' :target="'del_coll_btn'+collection.id" :ref="'collection_deletion_confirmation'+collection.id" placement="bottom" triggers="click blur">
+            <b-btn variant="outline-primary" class="ml-auto" @click="newCollectionName=''" :id="'ren_coll_btn'+collection.id"> Rename </b-btn>
+            <b-btn variant="outline-primary" class="ml-auto" :id="'del_coll_btn'+collection.id"> Delete </b-btn>
+            <b-btn variant="outline-primary" class="ml-auto" @click="prestore(collection)"> Store </b-btn>
+            <b-popover :target="'ren_coll_btn'+collection.id" :ref="'collection_rename'+collection.id" placement="bottom" triggers="click blur">
+              <b-form-input v-model="newCollectionName" type="text" autofocus trim /> <br>
+              <b-btn variant="secondary" @click="closePopover('ren_coll_btn'+collection.id); newCollectionName=''" > Cancel </b-btn>
+              <b-btn :id="'ren_coll_confirm_btn'+collection.id" variant="primary"   @click="closePopover('ren_coll_btn'+collection.id); rename(collection)" :disabled='isInvalidNewCollectionName' > Rename </b-btn>
+              <div v-if="isInvalidNewCollectionName">
+                <div id="spacer_below">
+                  <b-alert show variant="warning">{{ reasonForInvalidNewCollectionName }}</b-alert>
+                </div>
+              </div>
+            </b-popover>
+            <b-popover :title='collection.name' :target="'del_coll_btn'+collection.id" :ref="'collection_deletion_confirmation'+collection.id" placement="bottom" triggers="click blur">
               <b-btn variant="secondary" @click="closePopover('del_coll_btn'+collection.id)"                    > Cancel </b-btn>
               <b-btn variant="primary"   @click="closePopover('del_coll_btn'+collection.id); remove(collection)"> Delete permanently</b-btn>
             </b-popover>
@@ -33,7 +45,7 @@
     <b-modal centered ref="myModalRef" title="Store selected data sets" ok-title="Store" size="lg" @ok="store()">
       Following data sets are selected for storage:
       <ul>
-        <li v-for="it in storeData.docs">{{ it.split('/').pop() }}</li>
+        <li v-for="it in storeData.docs" :key="it">{{ it.split('/').pop() }}</li>
       </ul>
       Please select a storage provider to proceed:
       <b-form-select v-model="selected" :options="options" class="mb-3" />
@@ -61,6 +73,7 @@ export default {
     return {
       loaded: false,
       selected: null,
+      newCollectionName: '',
       storeData: {
         'bookmarkId': null,
         'bookmarkName': null,
@@ -94,6 +107,18 @@ export default {
     },
     isLoading () {
       return this.$store.getters.isLoading
+    },
+    isInvalidNewCollectionName() {
+      return this.reasonForInvalidNewCollectionName.length > 0
+    },
+    reasonForInvalidNewCollectionName() {
+      if (this.newCollectionName.length === 0) {
+        return "Blank name!"
+      }
+      if (this.collections.map(c => c.name).includes(this.newCollectionName)) {
+        return "Duplicate name!"
+      }
+      return ""
     },
     collections () {
       return this.$store.getters.getCollectionList
@@ -150,14 +175,22 @@ export default {
 
     remove(collection) {
       this.$store.dispatch('deleteCollection', {
+        vm: this,
         collectionID: collection.id,
-        vm: this
+      })
+    },
+
+    rename(collection) {
+      this.$store.dispatch('updateCollection', {
+        vm: this,
+        collectionID: collection.id,
+        collectionName: this.newCollectionName
       })
     },
 
     closePopover(id) {
       this.$root.$emit('bv::hide::popover', id)
-    },
+    }
   }
 }
 </script>
@@ -169,5 +202,8 @@ h4 {
 .list-group{
   margin-top: 20px;
   margin-bottom: 20px
+}
+#spacer_below {
+  padding-top: 0.5rem;
 }
 </style>
