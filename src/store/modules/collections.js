@@ -99,8 +99,14 @@ const actions = {
   },
   updateCollection ({commit, state}, payload) {
     const collection = this.getters.getCollectionById(payload.collectionID)
-    if (payload.docID) {
-      collection.docs.push(payload.docID)
+    if (payload.addDocID) {
+      collection.docs.push(payload.addDocID)
+    }
+    if (payload.removeDocID) {
+      var index = collection.docs.indexOf(payload.removeDocID)
+      if (index > -1) {
+        collection.docs.splice(index, 1)
+      }
     }
     if (payload.collectionName) {
       collection.name = payload.collectionName

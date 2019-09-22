@@ -15,19 +15,31 @@
             <b-card v-if="dataset._source">
               <document-media :doc="dataset"></document-media>
               <div slot="footer">
-                <!-- Enable buttons buttons once they offer actual functionality -->
-                <!--
+                <div align="right">
                   <b-button-group>
-                  <b-button disabled variant="link">Remove from collection</b-button>
-                  <b-button disabled variant="link">More information</b-button>
+                    <!-- Potentially other buttons go here -->
+                    <b-btn variant="link" :id="'rm_from_coll_btn1'+dataset.id" >Remove from collection</b-btn>
+                    <b-popover :target="'rm_from_coll_btn1'+dataset.id" :ref="'rm_from_coll_btn1'+dataset.id" placement="bottom" triggers="click blur">
+                      <b-btn variant="secondary" @click="closePopover('rm_from_coll_btn1'+dataset.id)"                    > Cancel </b-btn>
+                      <b-btn variant="primary"   @click="closePopover('rm_from_coll_btn1'+dataset.id); removeFromCollection(dataset.id)"> Remove</b-btn>
+                    </b-popover>
                   </b-button-group>
-                -->
+                </div>
                 <select-research-data :research-data-list="dataset._source.researchDataList"></select-research-data>
               </div>
             </b-card>
             <div v-else>
               <h5>
-                <b-alert show variant="info">We are sorry, but this data set is no more available.</b-alert>
+                <b-alert show variant="info" align="justify">
+                    <div class="d-flex w-100 justify-content-between">
+                    We are sorry, but this data set is no more available.
+                    <b-btn variant="link" :id="'rm_from_coll_btn2'+dataset.id">Remove from collection</b-btn>
+                    <b-popover :target="'rm_from_coll_btn2'+dataset.id" :ref="'rm_from_coll_btn2'+dataset.id" placement="bottom" triggers="click blur">
+                      <b-btn variant="secondary" @click="closePopover('rm_from_coll_btn2'+dataset.id)"                    > Cancel </b-btn>
+                      <b-btn variant="primary"   @click="closePopover('rm_from_coll_btn2'+dataset.id); removeFromCollection(dataset.id)"> Remove</b-btn>
+                    </b-popover>
+                    </div>
+                </b-alert>
               </h5>
             </div>
           </div>
@@ -114,14 +126,27 @@ export default {
     getProviderLogo(linksArray) {
       let val = linksArray.filter(elem => elem.webLinkType == 'ProviderLogoURL')
       return val[0].webLinkURI
-    }
+    },
+    removeFromCollection(datasetID) {
+      if (this.collection.id != null) {
+        this.$store.dispatch('updateCollection', {
+          vm: this,
+          collectionID: this.collection.id,
+          removeDocID: datasetID
+        })
+      } else {
+         console.error("Empty collection ID");
+      }
+    },
+    closePopover(id) {
+      this.$root.$emit('bv::hide::popover', id)
+    },
   }
 }
 </script>
 
 
 <style scoped>
-
 .card {
   margin-top: 1rem;
 }
