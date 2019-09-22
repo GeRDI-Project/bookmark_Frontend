@@ -99,7 +99,12 @@ const actions = {
   },
   updateCollection ({commit, state}, payload) {
     const collection = this.getters.getCollectionById(payload.collectionID)
-    collection.docs.push(payload.docID)
+    if (payload.docID) {
+      collection.docs.push(payload.docID)
+    }
+    if (payload.collectionName) {
+      collection.name = payload.collectionName
+    }
     axios.put(getPath(payload.vm) + '/' + collection.id, collection, {
       headers: {
         'Content-Type': 'application/json'
