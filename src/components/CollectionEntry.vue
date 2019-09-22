@@ -129,10 +129,10 @@ export default {
     },
     removeFromCollection(datasetID) {
       if (this.collection.id != null) {
-        this.$store.dispatch('removeFromCollection', {
+        this.$store.dispatch('updateCollection', {
           vm: this,
           collectionID: this.collection.id,
-          docID: datasetID
+          removeDocID: datasetID
         })
       } else {
          console.error("Empty collection ID");

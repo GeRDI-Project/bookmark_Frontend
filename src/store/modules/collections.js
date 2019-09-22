@@ -99,28 +99,17 @@ const actions = {
   },
   updateCollection ({commit, state}, payload) {
     const collection = this.getters.getCollectionById(payload.collectionID)
-    if (payload.docID) {
-      collection.docs.push(payload.docID)
+    if (payload.addDocID) {
+      collection.docs.push(payload.addDocID)
+    }
+    if (payload.removeDocID) {
+      var index = collection.docs.indexOf(payload.removeDocID)
+      if (index > -1) {
+        collection.docs.splice(index, 1)
+      }
     }
     if (payload.collectionName) {
       collection.name = payload.collectionName
-    }
-    axios.put(getPath(payload.vm) + '/' + collection.id, collection, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(function (response) {
-    })
-    .catch(function (error) {
-      console.log(error)
-    })
-  },
-  removeFromCollection ({commit, state}, payload) {
-    const collection = this.getters.getCollectionById(payload.collectionID)
-    var index = collection.docs.indexOf(payload.docID)
-    if (index > -1) {
-      collection.docs.splice(index, 1)
     }
     axios.put(getPath(payload.vm) + '/' + collection.id, collection, {
       headers: {
